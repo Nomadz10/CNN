@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            grid-gap: 3px;
+        }
+        .cell {
+            border: 1px solid black;
+            text-align: center;
+        }
+    </style>
+    <title>CNN</title>
+</head>
+<body>
+<form id="form" onsubmit="return false;">
+    <input type="file" id="file-input" accept="image/*" onchange="previewImage()">
+    <img id="preview-image" style="display: none; width: 300px; height: 300px;" alt="" src="">
+    <h1>Convolution Matrix</h1>
+    <div class="grid">
+        <label>
+            <input class="cell" type="text" pattern="-?[0-9]*" oninput="if(this.value.length>3) this.value=this.value.slice(0,3)" id="cell-0-0">
+        </label>
+        <label>
+            <input class="cell" type="text" pattern="-?[0-9]*" oninput="if(this.value.length>3) this.value=this.value.slice(0,3)" id="cell-0-1">
+        </label>
+        <label>
+            <input class="cell" type="text" pattern="-?[0-9]*" oninput="if(this.value.length>3) this.value=this.value.slice(0,3)" id="cell-0-2">
+        </label>
+        <label>
+            <input class="cell" type="text" pattern="-?[0-9]*" oninput="if(this.value.length>3) this.value=this.value.slice(0,3)" id="cell-1-0">
+        </label>
+        <label>
+            <input class="cell" type="text" pattern="-?[0-9]*" oninput="if(this.value.length>3) this.value=this.value.slice(0,3)" id="cell-1-1">
+        </label>
+        <label>
+            <input class="cell" type="text" pattern="-?[0-9]*" oninput="if(this.value.length>3) this.value=this.value.slice(0,3)" id="cell-1-2">
+        </label>
+        <label>
+            <input class="cell" type="text" pattern="-?[0-9]*" oninput="if(this.value.length>3) this.value=this.value.slice(0,3)" id="cell-2-0">
+        </label>
+        <label>
+            <input class="cell" type="text" pattern="-?[0-9]*" oninput="if(this.value.length>3) this.value=this.value.slice(0,3)" id="cell-2-1">
+        </label>
+        <label>
+            <input class="cell" type="text" pattern="-?[0-9]*" oninput="if(this.value.length>3) this.value=this.value.slice(0,3)" id="cell-2-2">
+        </label>
+    </div>
+    <h1>Number of Convolutions</h1>
+    <label for="num-convolutions">Number of Convolutions:</label>
+    <input type="text" id="num-convolutions" pattern="[1-9][0-9]*">
+    <br><br>
+    <button id="submit" onclick="formSubmit();">Submit</button>
+</form>
+
+<script>
+    function formSubmit() {
+        let convFilter = submitMatrix();
+        let numConv = NumConvolutions();
+        let img = document.getElementById("preview-image");
+        let grayImage = convertToGrayscale(img);
+        while (numConv > 0){
+            grayImage = convolveImage(img, convFilter)
+            numConv--;
+        }
+        displayImage(grayImage);
+        return false;
+    }
+
+    function displayImage(img) {
+        //outputImage.src = URL.createObjectURL(outputImage);
+        img.style.display = "block";
+    }
+    function previewImage() {
+        let fileInput = document.getElementById("file-input");
+        let previewImage = document.getElementById("preview-image");
+        previewImage.src = URL.createObjectURL(fileInput.files[0]);
+        previewImage.style.display = "block";
+    }
+    function submitMatrix() {
+        let matrix = [];
+        for (let i = 0; i < 3; i++) {
+            let row = [];
+            for (let j = 0; j < 3; j++) {
+                let cellId = "cell-" + i + "-" + j;
+                let cellValue = parseInt(document.getElementById(cellId).value);
+                row.push(cellValue);
+            }
+            matrix.push(row);
+        }
+        console.log(matrix);
+        return matrix;
+    }
+    function NumConvolutions() {
+        return parseInt(document.getElementById("num-convolutions").value)
+    }
+
+    function convertToGrayscale(img) {
+        let image = img;
+        let canvas = document.createElement("canvas");
+        canvas.width = 300;
+        canvas.height = 300;
+        let ctx = canvas.getContext("2d");
+        ctx.drawImage(image, 500, 500);
+        let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        let data = imageData.data;
+        for (let i = 0; i < data.length; i += 4) {
+            let avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+            data[i] = avg;
+            data[i + 1] = avg;
+            data[i + 2] = avg;
+        }
+        ctx.putImageData(imageData, 0, 0);
+        return canvas.toDataURL();
+    }
+    function convolveImage(img, kernel) {
+        let image = img;
+        let canvas = document.createElement("canvas");
+        canvas.width = image.width;
+        canvas.height = image.height;
+
+        let context = canvas.getContext("2d");
+        context.drawImage(image, 0, 0);
+
+        let imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+        let pixels = imageData.data;
+
+        let outputImageData = context.createImageData(canvas.width, canvas.height);
+        let outputPixels = outputImageData.data;
+
+        let kernelSize = Math.sqrt(kernel.length);
+        let kernelRadius = Math.floor(kernelSize / 2);
+
+        for (let y = 0; y < canvas.height; y++) {
+            for (let x = 0; x < canvas.width; x++) {
+                let sum = 0;
+
+                for (let ky = -kernelRadius; ky <= kernelRadius; ky++) {
+                    for (let kx = -kernelRadius; kx <= kernelRadius; kx++) {
+                        let imageX = x + kx;
+                        let imageY = y + ky;
+
+                        if (imageX >= 0 && imageX < canvas.width && imageY >= 0 && imageY < canvas.height) {
+                            let kernelIndex = (ky + kernelRadius) * kernelSize + (kx + kernelRadius);
+                            let imageIndex = (imageY * canvas.width + imageX) * 4;
+
+                            sum += pixels[imageIndex] * kernel[kernelIndex];
+                        }
+                    }
+                }
+
+                let outputIndex = (y * canvas.width + x) * 4;
+                outputPixels[outputIndex] = sum;
+                outputPixels[outputIndex + 1] = sum;
+                outputPixels[outputIndex + 2] = sum;
+                outputPixels[outputIndex + 3] = 255;
+            }
+        }
+
+        context.putImageData(outputImageData, 0, 0);
+        let outputImage = new Image();
+        outputImage.src = canvas.toDataURL();
+        return outputImage;
+    }
+
+</script>
+</body>
+</html>
