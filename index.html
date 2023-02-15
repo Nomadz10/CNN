@@ -37,6 +37,14 @@
 <canvas id="output-canvas"></canvas>
 <script>
     const inputImage = document.getElementById("input-image");
+    var resizedImage = new Image();
+    var canvas = document.createElement('canvas')
+    var ctx = canvas.getContext('2d')
+
+    var w = 300
+    var h = 300
+
+
     const convolutionMatrix = [
         [
             document.getElementById("matrix-0-0"),
@@ -71,6 +79,7 @@
                 grayscaleMatrix[i][j] = 0.3 * r + 0.59 * g + 0.11 * b;
             }
         }
+        console.log(grayscaleMatrix)
         return grayscaleMatrix;
     }
     function convolution2D(largeMatrix, smallMatrix) {
@@ -81,7 +90,16 @@
                 let sum = 0;
                 for (let k = 0; k < 3; k++) {
                     for (let l = 0; l < 3; l++) {
-                        sum += largeMatrix[i + k][j + l] * smallMatrix[k][l];
+                        sum += (largeMatrix[i + k][j + l] * smallMatrix[k][l]);
+                        console.log(smallMatrix[k][l])
+                        sum = Math.sqrt(sum * sum)
+
+                        if (sum > 255){
+                            sum = 0;
+                        }
+                        if (sum < 0){
+                            sum = 255;
+                        }
                     }
                 }
                 result[i][j] = sum;
@@ -99,8 +117,20 @@
             image.onload = function() {
                 outputCanvas.width = image.width;
                 outputCanvas.height = image.height;
+                if (outputCanvas.width > w) {
+                    outputCanvas.height *= w / outputCanvas.width;
+                    outputCanvas.width = w;
+                }
+                else {
+                    if (outputCanvas.height > h) {
+                        outputCanvas.width *= h / outputCanvas.height;
+                        outputCanvas.height = h;
+                    }
+                }
+                canvas.width = outputCanvas.width;
+                canvas.height = outputCanvas.height;
                 let context = outputCanvas.getContext("2d");
-                context.drawImage(image, 0, 0 );
+                context.drawImage(image, 0, 0, outputCanvas.width, outputCanvas.height );
                 inputImageData = context.getImageData(0, 0, image.width, image.height);
             };
             image.src = event.target.result;
@@ -115,8 +145,10 @@
         }
         let iterations = parseInt(iterationsInput.value);
         let finMatrix = convertToGrayscale(inputImageData);
+        console.log(finMatrix)
+        let convMatrix = [[-1,-1,-1],[-1,8,-1],[-1,-1,-1]];
         for (let i = 0; i < iterations; i++) {
-            finMatrix = convolution2D(finMatrix, convolutionMatrix);
+            finMatrix = convolution2D(finMatrix,convMatrix);
         }
         let canvas = document.getElementById('output-canvas');
         canvas.width = finMatrix[0].length;
@@ -127,15 +159,17 @@
 
         let finImgData = context.createImageData(canvas.width, canvas.height);
 
-        for (let j = 0; j < finMatrix.length; j++){
-            for(let k = 0; k < finMatrix[0].length; k++){
-                let ind = (j * canvas.width + j) * 4;
-                finImgData.data[ind] = finMatrix[j][k];
-                finImgData.data[ind+1] = finMatrix[j][k];
-                finImgData.data[ind+2] = finMatrix[j][k];
-                finImgData.data[ind+3] = 255;
+
+        for (let y = 0; y < finMatrix.length; y++) {
+            for (let x = 0; x < finMatrix[0].length; x++) {
+                const index = 4 * (x + y * finMatrix[0].length);
+                finImgData.data[index] = finMatrix[y][x];
+                finImgData.data[index + 1] = finMatrix[y][x];
+                finImgData.data[index + 2] = finMatrix[y][x];
+                finImgData.data[index + 3] = 255;
             }
         }
+        console.log(finImgData)
 
         context.putImageData(finImgData,0,0);
 
