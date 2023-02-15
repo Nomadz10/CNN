@@ -37,12 +37,10 @@
 <canvas id="output-canvas"></canvas>
 <script>
     const inputImage = document.getElementById("input-image");
-    var resizedImage = new Image();
-    var canvas = document.createElement('canvas')
-    var ctx = canvas.getContext('2d')
-
-    var w = 300
-    var h = 300
+    let resizedImg = new Image();
+    const canvas = document.createElement('canvas');
+    const w = 300;
+    const h = 300;
 
 
     const convolutionMatrix = [
@@ -79,7 +77,7 @@
                 grayscaleMatrix[i][j] = 0.3 * r + 0.59 * g + 0.11 * b;
             }
         }
-        console.log(grayscaleMatrix)
+        //console.log(grayscaleMatrix)
         return grayscaleMatrix;
     }
     function convolution2D(largeMatrix, smallMatrix) {
@@ -91,7 +89,7 @@
                 for (let k = 0; k < 3; k++) {
                     for (let l = 0; l < 3; l++) {
                         sum += (largeMatrix[i + k][j + l] * smallMatrix[k][l]);
-                        console.log(smallMatrix[k][l])
+                        //console.log(smallMatrix[k][l])
                         sum = Math.sqrt(sum * sum)
 
                         if (sum > 255){
@@ -117,11 +115,12 @@
             image.onload = function() {
                 outputCanvas.width = image.width;
                 outputCanvas.height = image.height;
-                if (outputCanvas.width > w) {
-                    outputCanvas.height *= w / outputCanvas.width;
-                    outputCanvas.width = w;
-                }
-                else {
+                if (outputCanvas.width > outputCanvas.height) {
+                    if (outputCanvas.width > w) {
+                        outputCanvas.height *= w / outputCanvas.width;
+                        outputCanvas.width = w;
+                    }
+                } else {
                     if (outputCanvas.height > h) {
                         outputCanvas.width *= h / outputCanvas.height;
                         outputCanvas.height = h;
@@ -131,7 +130,7 @@
                 canvas.height = outputCanvas.height;
                 let context = outputCanvas.getContext("2d");
                 context.drawImage(image, 0, 0, outputCanvas.width, outputCanvas.height );
-                inputImageData = context.getImageData(0, 0, image.width, image.height);
+                inputImageData = context.getImageData(0, 0, outputCanvas.width, outputCanvas.height);
             };
             image.src = event.target.result;
         };
@@ -145,8 +144,21 @@
         }
         let iterations = parseInt(iterationsInput.value);
         let finMatrix = convertToGrayscale(inputImageData);
-        console.log(finMatrix)
+        //console.log(finMatrix)
         let convMatrix = [[-1,-1,-1],[-1,8,-1],[-1,-1,-1]];
+
+        /*convMatrix[0][0] = document.getElementById("matrix-0-0")
+        convMatrix[0][1] = document.getElementById("matrix-0-1")
+        convMatrix[0][2] = document.getElementById("matrix-0-2")
+        convMatrix[1][0] = document.getElementById("matrix-1-0")
+        convMatrix[1][1] = document.getElementById("matrix-1-1")
+        convMatrix[1][2] = document.getElementById("matrix-1-2")
+        convMatrix[2][0] = document.getElementById("matrix-2-0")
+        convMatrix[2][1] = document.getElementById("matrix-2-1")
+        convMatrix[2][2] = document.getElementById("matrix-2-2")*/
+
+        //console.log(convMatrix)
+
         for (let i = 0; i < iterations; i++) {
             finMatrix = convolution2D(finMatrix,convMatrix);
         }
@@ -169,7 +181,7 @@
                 finImgData.data[index + 3] = 255;
             }
         }
-        console.log(finImgData)
+        //console.log(finImgData)
 
         context.putImageData(finImgData,0,0);
 
