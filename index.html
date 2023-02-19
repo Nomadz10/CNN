@@ -92,12 +92,12 @@
                         //console.log(smallMatrix[k][l])
                         sum = Math.sqrt(sum * sum)
 
-                        if (sum > 255){
-                            sum = 0;
-                        }
-                        if (sum < 0){
-                            sum = 255;
-                        }
+                        //if (sum > 255){
+                        //    sum = 255;
+                        //}
+                        //if (sum < 0){
+                        //    sum = 0;
+                        //}
                     }
                 }
                 result[i][j] = sum;
@@ -108,7 +108,7 @@
 
 
     inputImage.addEventListener("change",
-    function(event) {
+    function(event) {1
         let reader = new FileReader();
         reader.onload = function(event) {
             let image = new Image();
@@ -145,17 +145,18 @@
         let iterations = parseInt(iterationsInput.value);
         let finMatrix = convertToGrayscale(inputImageData);
         //console.log(finMatrix)
-        let convMatrix = [[-1,-1,-1],[-1,8,-1],[-1,-1,-1]];
+        let convMatrix = [[-1,-1,-1[-1,2,-1],[-1,-1,-1]]
 
-        /*convMatrix[0][0] = document.getElementById("matrix-0-0")
-        convMatrix[0][1] = document.getElementById("matrix-0-1")
-        convMatrix[0][2] = document.getElementById("matrix-0-2")
-        convMatrix[1][0] = document.getElementById("matrix-1-0")
-        convMatrix[1][1] = document.getElementById("matrix-1-1")
-        convMatrix[1][2] = document.getElementById("matrix-1-2")
-        convMatrix[2][0] = document.getElementById("matrix-2-0")
-        convMatrix[2][1] = document.getElementById("matrix-2-1")
-        convMatrix[2][2] = document.getElementById("matrix-2-2")*/
+        convMatrix[0][0] = parseInt((document.getElementById("matrix-0-0")).value)
+        convMatrix[0][1] = parseInt((document.getElementById("matrix-0-1")).value)
+        convMatrix[0][2] = parseInt((document.getElementById("matrix-0-2")).value)
+        convMatrix[1][0] = parseInt((document.getElementById("matrix-1-0")).value)
+        convMatrix[1][1] = parseInt((document.getElementById("matrix-1-1")).value)
+        convMatrix[1][2] = parseInt((document.getElementById("matrix-1-2")).value)
+        convMatrix[2][0] = parseInt((document.getElementById("matrix-2-0")).value)
+        convMatrix[2][1] = parseInt((document.getElementById("matrix-2-1")).value)
+        convMatrix[2][2] = parseInt((document.getElementById("matrix-2-2")).value)
+
 
         //console.log(convMatrix)
 
