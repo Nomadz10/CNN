@@ -1,0 +1,64 @@
+table {
+    border-collapse: separate;
+    width: 100%;
+    max-width: 210px;
+
+}
+
+th, td {
+    padding: 7px;
+    text-align: center;
+    border: 5px solid #ddd;
+    justify-content: center;
+
+}
+.outputImage{
+
+}
+.container {
+    display: flex;
+    justify-content: left;
+}
+.iter-container {
+    border-collapse: separate;
+    flex: 1;
+    max-width: 200px;
+    margin-left: 20px;
+    justify-content: center;
+}
+.matrix-container {
+    flex: 1;
+    max-width: 210px;
+    margin-left: 50px;
+    margin-right: 50px;
+    justify-content: center;
+}
+.button{
+    margin-left: 50px;
+}
+#iterations input{
+    width: 30px;
+    height: 20px;
+}
+#convolution-matrix input {
+    width: 30px;
+    height: 20px;
+}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+.image-container {
+    display: compact;
+    flex-wrap: nowrap;
+}
+#output-canvas {
+    margin-top: 57px;
+}
+
+

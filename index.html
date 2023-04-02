@@ -2,191 +2,71 @@
 <html lang="en">
 <head>
     <title>Image Convolution</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <h1>Image Convolution</h1>
-<input type="file" id="input-image" />
-<br />
-<br />
-<h2>Convolution Matrix</h2>
-<table id="convolution-matrix">
-    <tr>
-        <td><input type="number" id="matrix-0-0" /></td>
-        <td><input type="number" id="matrix-0-1" /></td>
-        <td><input type="number" id="matrix-0-2" /></td>
-    </tr>
-    <tr>
-        <td><input type="number" id="matrix-1-0" /></td>
-        <td><input type="number" id="matrix-1-1" /></td>
-        <td><input type="number" id="matrix-1-2" /></td>
-    </tr>
-    <tr>
-        <td><input type="number" id="matrix-2-0" /></td>
-        <td><input type="number" id="matrix-2-1" /></td>
-        <td><input type="number" id="matrix-2-2" /></td>
-    </tr>
-</table>
-<br />
-<label for="iterations">Number of Iterations:</label>
-<input type="number" id="iterations" value="1" />
-<br />
-<br />
-<button id="convolve-button">Convolve</button>
-<br />
-<br />
-<canvas id="output-canvas"></canvas>
-<script>
-    const inputImage = document.getElementById("input-image");
-    let resizedImg = new Image();
-    const canvas = document.createElement('canvas');
-    const w = 300;
-    const h = 300;
+<div class="container">
+   <div class="image-container">
+        <input type="file" id="input-image" />
+        <br/>
+        <br/>
+        <br/>
+        <img id="uploaded-image" style="display:none" />
+        <canvas id="initial-canvas"></canvas>
+    </div>
+    <br />
+    <br />
 
+    <div class="matrix-container">
+        <table id="convolution-matrix">
+            <div class="title">
+                <h2>Convolution Matrix</h2>
+            </div>
 
-    const convolutionMatrix = [
-        [
-            document.getElementById("matrix-0-0"),
-            document.getElementById("matrix-0-1"),
-            document.getElementById("matrix-0-2")
-        ],
-        [
-            document.getElementById("matrix-1-0"),
-            document.getElementById("matrix-1-1"),
-            document.getElementById("matrix-1-2")
-        ],
-        [
-            document.getElementById("matrix-2-0"),
-            document.getElementById("matrix-2-1"),
-            document.getElementById("matrix-2-2")
-        ]
-    ];
-    const iterationsInput = document.getElementById("iterations");
-    const convolveButton = document.getElementById("convolve-button");
-    const outputCanvas = document.getElementById("output-canvas");
-    let inputImageData;
+            <tr>
+                <td><input type="number" id="matrix-0-0" /></td>
+                <td><input type="number" id="matrix-0-1" /></td>
+                <td><input type="number" id="matrix-0-2" /></td>
+            </tr>
+            <tr>
+                <td><input type="number" id="matrix-1-0" /></td>
+                <td><input type="number" id="matrix-1-1" /></td>
+                <td><input type="number" id="matrix-1-2" /></td>
+            </tr>
+            <tr>
+                <td><input type="number" id="matrix-2-0" /></td>
+                <td><input type="number" id="matrix-2-1" /></td>
+                <td><input type="number" id="matrix-2-2" /></td>
+            </tr>
 
-    function convertToGrayscale(imageData) {
-        let grayscaleMatrix = [];
-        for (let i = 0; i < imageData.height; i++) {
-            grayscaleMatrix[i] = [];
-            for (let j = 0; j < imageData.width; j++) {
-                let index = (i * 4) * imageData.width + (j * 4);
-                let r = imageData.data[index];
-                let g = imageData.data[index + 1];
-                let b = imageData.data[index + 2];
-                grayscaleMatrix[i][j] = 0.3 * r + 0.59 * g + 0.11 * b;
-            }
-        }
-        //console.log(grayscaleMatrix)
-        return grayscaleMatrix;
-    }
-    function convolution2D(largeMatrix, smallMatrix) {
-        let result = [];
-        for (let i = 0; i < largeMatrix.length - 2; i++) {
-            result[i] = [];
-            for (let j = 0; j < largeMatrix[i].length - 2; j++) {
-                let sum = 0;
-                for (let k = 0; k < 3; k++) {
-                    for (let l = 0; l < 3; l++) {
-                        sum += (largeMatrix[i + k][j + l] * smallMatrix[k][l]);
-                        //console.log(smallMatrix[k][l])
-                        sum = Math.sqrt(sum * sum)
-
-                        //if (sum > 255){
-                        //    sum = 255;
-                        //}
-                        //if (sum < 0){
-                        //    sum = 0;
-                        //}
-                    }
-                }
-                result[i][j] = sum;
-            }
-        }
-        return result;
-    }
-
-
-    inputImage.addEventListener("change",
-    function(event) {1
-        let reader = new FileReader();
-        reader.onload = function(event) {
-            let image = new Image();
-            image.onload = function() {
-                outputCanvas.width = image.width;
-                outputCanvas.height = image.height;
-                if (outputCanvas.width > outputCanvas.height) {
-                    if (outputCanvas.width > w) {
-                        outputCanvas.height *= w / outputCanvas.width;
-                        outputCanvas.width = w;
-                    }
-                } else {
-                    if (outputCanvas.height > h) {
-                        outputCanvas.width *= h / outputCanvas.height;
-                        outputCanvas.height = h;
-                    }
-                }
-                canvas.width = outputCanvas.width;
-                canvas.height = outputCanvas.height;
-                let context = outputCanvas.getContext("2d");
-                context.drawImage(image, 0, 0, outputCanvas.width, outputCanvas.height );
-                inputImageData = context.getImageData(0, 0, outputCanvas.width, outputCanvas.height);
-            };
-            image.src = event.target.result;
-        };
-        reader.readAsDataURL(event.target.files[0]);
-    });
-
-    convolveButton.addEventListener("click",
-    function() {
-        if (!inputImageData) {
-            return alert("Please select an image.");
-        }
-        let iterations = parseInt(iterationsInput.value);
-        let finMatrix = convertToGrayscale(inputImageData);
-        //console.log(finMatrix)
-        let convMatrix = [[-1,-1,-1[-1,2,-1],[-1,-1,-1]]
-
-        convMatrix[0][0] = parseInt((document.getElementById("matrix-0-0")).value)
-        convMatrix[0][1] = parseInt((document.getElementById("matrix-0-1")).value)
-        convMatrix[0][2] = parseInt((document.getElementById("matrix-0-2")).value)
-        convMatrix[1][0] = parseInt((document.getElementById("matrix-1-0")).value)
-        convMatrix[1][1] = parseInt((document.getElementById("matrix-1-1")).value)
-        convMatrix[1][2] = parseInt((document.getElementById("matrix-1-2")).value)
-        convMatrix[2][0] = parseInt((document.getElementById("matrix-2-0")).value)
-        convMatrix[2][1] = parseInt((document.getElementById("matrix-2-1")).value)
-        convMatrix[2][2] = parseInt((document.getElementById("matrix-2-2")).value)
-
-
-        //console.log(convMatrix)
-
-        for (let i = 0; i < iterations; i++) {
-            finMatrix = convolution2D(finMatrix,convMatrix);
-        }
-        let canvas = document.getElementById('output-canvas');
-        canvas.width = finMatrix[0].length;
-        canvas.height = finMatrix.length;
-        document.body.appendChild(canvas);
-
-        let context = canvas.getContext('2d');
-
-        let finImgData = context.createImageData(canvas.width, canvas.height);
-
-
-        for (let y = 0; y < finMatrix.length; y++) {
-            for (let x = 0; x < finMatrix[0].length; x++) {
-                const index = 4 * (x + y * finMatrix[0].length);
-                finImgData.data[index] = finMatrix[y][x];
-                finImgData.data[index + 1] = finMatrix[y][x];
-                finImgData.data[index + 2] = finMatrix[y][x];
-                finImgData.data[index + 3] = 255;
-            }
-        }
-        //console.log(finImgData)
-
-        context.putImageData(finImgData,0,0);
-
-    });
-</script>
+            <tr>
+                <td colspan="3">
+                    <label for="options">Choose an option:</label>
+                    <select id="options" name="options">
+                        <option value="option1">Identity</option>
+                        <option value="option2">Sharpen</option>
+                        <option value="option3">Mean Blur</option>
+                        <option value="option4">Edge Detection</option>
+                        <option value="option5">Gaussian Blur</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+        <div class="iter-container">
+            <label for="iterations">Number of Iterations:</label>
+            <input type="number" id="iterations" value="1" style="width: 25px;" />
+            <br/>
+            <br/>
+            <div class="button">
+                <button id="convolve-button">Convolve</button>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div id="output-canvas">
+    </div>
+</div>
+<script src="script.js"></script>
 </body>
 </html>
