@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <title>Image Convolution</title>
-
     <style>
         table {
             border-collapse: separate;
@@ -19,7 +18,7 @@
 
         }
         .outputImage{
-
+            margin-top: 20px;
         }
         .container {
             display: flex;
@@ -35,8 +34,8 @@
         .matrix-container {
             flex: 1;
             max-width: 210px;
-            margin-left: 50px;
-            margin-right: 50px;
+            margin-left: 20px;
+            margin-right: 20px;
             justify-content: center;
         }
         .button{
@@ -66,6 +65,11 @@
         #output-canvas {
             margin-top: 57px;
         }
+        .save{
+            margin-top:1px;
+            margin-left:950px
+        }
+
     </style>
 </head>
 <body>
@@ -79,6 +83,7 @@
         <img id="uploaded-image" style="display:none" />
         <canvas id="initial-canvas"></canvas>
     </div>
+
     <br />
     <br />
 
@@ -113,6 +118,8 @@
                         <option value="option3">Mean Blur</option>
                         <option value="option4">Edge Detection</option>
                         <option value="option5">Gaussian Blur</option>
+                        <option value="option6">Horizontal Sobel</option>
+                        <option value="option7">Vertical Sobel</option>
                     </select>
                 </td>
             </tr>
@@ -128,8 +135,14 @@
         </div>
     </div>
     <br/>
-    <div id="output-canvas">
-    </div>
+    <br/>
+    <br/>
+    <div id="output-canvas"></div>
+
+
+</div>
+<div class="save">
+    <button id="save-button">Save Image</button>
 </div>
 <script>
     const matrixValues = {
@@ -137,7 +150,9 @@
         option2: [[0, -1, 0], [-1, 5, -1], [0, -1, 0]],
         option3: [[1/9, 1/9, 1/9], [1/9, 1/9, 1/9], [1/9, 1/9, 1/9]],
         option4: [[-1, -1, -1], [-1, 8, -1], [-1, -1, -1]],
-        option5: [[1/16, 2/16, 1/16], [2/16, 4/16, 2/16], [1/16, 2/16, 1/16]]
+        option5: [[1/16, 2/16, 1/16], [2/16, 4/16, 2/16], [1/16, 2/16, 1/16]],
+        option6: [[-1,-2,-1],[0,0,0],[1,2,1]],
+        option7: [[-1,0,1],[-2,0,2],[-1,0,1]],
     };
 
     const selectElement = document.getElementById('options');
@@ -197,6 +212,10 @@
                     }
                 }
                 result[i][j] = sum;
+                if (result[i][j] > 255) {
+                    let added = sum / 255;
+                    result[i][j] = (sum % 255) + added;
+                }
             }
         }
         return result;
@@ -204,8 +223,8 @@
 
     const inputImage = document.getElementById("input-image");
     const canvas = document.createElement('canvas');
-    const w = 600;
-    const h = 600;
+    const w = 700;
+    const h = 800;
     inputImage.addEventListener("change", function(event) {
         let canvasDiv = document.getElementById('output-canvas');
         canvasDiv.innerHTML = '';
@@ -267,9 +286,16 @@
 
         //ACTUAL CONVOLUTIONS HAPPENING
         for (let i = 0; i < iterations; i++) {
+            //ADDING PADDING
+            let size = finMatrix[0].length;
+            const zerosArray = new Array(size).fill(0);
+            finMatrix.unshift(zerosArray);
+            finMatrix.push(zerosArray);
+            finMatrix = finMatrix.map(row => [0,...row, 0]);
+            console.log(finMatrix)
             finMatrix = convolution2D(finMatrix,convMatrix);
         }
-
+        console.log(finMatrix)
         let canvas = document.createElement('canvas')
         let canvasDiv = document.getElementById('output-canvas');
         canvasDiv.innerHTML = '';
@@ -291,6 +317,16 @@
             }
         }
         context.putImageData(finImgData, 0, 0);
+    });
+    const saveButton = document.getElementById("save-button");
+    saveButton.addEventListener("click", () => {
+        const dataURL = canvas.toDataURL("image/png"); // convert canvas content to data URL
+        const downloadLink = document.createElement("a"); // create a new download link
+        downloadLink.href = dataURL; // set the href of the link to the data URL
+        downloadLink.download = "matrix-image.png"; // set the download filename
+        document.body.appendChild(downloadLink); // append the link to the document body
+        downloadLink.click(); // simulate a click on the link to trigger the download
+        document.body.removeChild(downloadLink); // remove the link from the document body
     });
 </script>
 </body>
