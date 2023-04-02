@@ -13,7 +13,7 @@ th, td {
 
 }
 .outputImage{
-
+    margin-top: 20px;
 }
 .container {
     display: flex;
@@ -29,8 +29,8 @@ th, td {
 .matrix-container {
     flex: 1;
     max-width: 210px;
-    margin-left: 50px;
-    margin-right: 50px;
+    margin-left: 20px;
+    margin-right: 20px;
     justify-content: center;
 }
 .button{
@@ -60,5 +60,8 @@ input[type="number"] {
 #output-canvas {
     margin-top: 57px;
 }
-
+.save{
+    margin-top:1px;
+    margin-left:950px
+}
 

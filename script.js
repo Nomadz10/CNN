@@ -4,7 +4,9 @@ const matrixValues = {
     option2: [[0, -1, 0], [-1, 5, -1], [0, -1, 0]],
     option3: [[1/9, 1/9, 1/9], [1/9, 1/9, 1/9], [1/9, 1/9, 1/9]],
     option4: [[-1, -1, -1], [-1, 8, -1], [-1, -1, -1]],
-    option5: [[1/16, 2/16, 1/16], [2/16, 4/16, 2/16], [1/16, 2/16, 1/16]]
+    option5: [[1/16, 2/16, 1/16], [2/16, 4/16, 2/16], [1/16, 2/16, 1/16]],
+    option6: [[-1,-2,-1],[0,0,0],[1,2,1]],
+    option7: [[-1,0,1],[-2,0,2],[-1,0,1]],
 };
 
 const selectElement = document.getElementById('options');
@@ -63,7 +65,15 @@ function convolution2D(largeMatrix, smallMatrix) {
                     sum += (largeMatrix[i + k][j + l] * smallMatrix[k][l]);
                 }
             }
-        result[i][j] = sum;
+            result[i][j] = sum;
+            if (result[i][j] < 0) {
+                result[i][j] *= -1;
+            }
+            if (result[i][j] > 255) {
+                let added = sum / 255;
+                result[i][j] = (sum % 255) + added;
+            }
+
         }
     }
 return result;
@@ -71,8 +81,8 @@ return result;
 
 const inputImage = document.getElementById("input-image");
 const canvas = document.createElement('canvas');
-const w = 600;
-const h = 600;
+const w = 700;
+const h = 800;
 inputImage.addEventListener("change", function(event) {
     let canvasDiv = document.getElementById('output-canvas');
     canvasDiv.innerHTML = '';
@@ -134,9 +144,16 @@ convolveButton.addEventListener("click", function(event) {
 
     //ACTUAL CONVOLUTIONS HAPPENING
     for (let i = 0; i < iterations; i++) {
+        //ADDING PADDING
+        let size = finMatrix[0].length;
+        const zerosArray = new Array(size).fill(0);
+        finMatrix.unshift(zerosArray);
+        finMatrix.push(zerosArray);
+        finMatrix = finMatrix.map(row => [0,...row, 0]);
+        console.log(finMatrix)
         finMatrix = convolution2D(finMatrix,convMatrix);
     }
-
+    console.log(finMatrix)
     let canvas = document.createElement('canvas')
     let canvasDiv = document.getElementById('output-canvas');
     canvasDiv.innerHTML = '';
@@ -159,4 +176,13 @@ convolveButton.addEventListener("click", function(event) {
     }
     context.putImageData(finImgData, 0, 0);
 });
-
+const saveButton = document.getElementById("save-button");
+saveButton.addEventListener("click", () => {
+    const dataURL = canvas.toDataURL("image/png"); // convert canvas content to data URL
+    const downloadLink = document.createElement("a"); // create a new download link
+    downloadLink.href = dataURL; // set the href of the link to the data URL
+    downloadLink.download = "matrix-image.png"; // set the download filename
+    document.body.appendChild(downloadLink); // append the link to the document body
+    downloadLink.click(); // simulate a click on the link to trigger the download
+    document.body.removeChild(downloadLink); // remove the link from the document body
+});

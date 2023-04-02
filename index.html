@@ -212,10 +212,6 @@
                     }
                 }
                 result[i][j] = sum;
-                if (result[i][j] > 255) {
-                    let added = sum / 255;
-                    result[i][j] = (sum % 255) + added;
-                }
             }
         }
         return result;
@@ -317,17 +313,20 @@
             }
         }
         context.putImageData(finImgData, 0, 0);
+        const saveButton = document.getElementById("save-button");
+        saveButton.addEventListener("click", () => {
+            const dataURL = canvas.toDataURL("image/png"); // convert canvas content to data URL
+            const downloadLink = document.createElement("a"); // create a new download link
+            downloadLink.href = dataURL; // set the href of the link to the data URL
+            downloadLink.download = "convolutedImage.png"; // set the download filename
+            document.body.appendChild(downloadLink); // append the link to the document body
+            downloadLink.click(); // simulate a click on the link to trigger the download
+            document.body.removeChild(downloadLink); // remove the link from the document body
+        });
+
     });
-    const saveButton = document.getElementById("save-button");
-    saveButton.addEventListener("click", () => {
-        const dataURL = canvas.toDataURL("image/png"); // convert canvas content to data URL
-        const downloadLink = document.createElement("a"); // create a new download link
-        downloadLink.href = dataURL; // set the href of the link to the data URL
-        downloadLink.download = "matrix-image.png"; // set the download filename
-        document.body.appendChild(downloadLink); // append the link to the document body
-        downloadLink.click(); // simulate a click on the link to trigger the download
-        document.body.removeChild(downloadLink); // remove the link from the document body
-    });
+
+
 </script>
 </body>
 </html>
