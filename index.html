@@ -3,13 +3,15 @@
 <head>
     <title>Image Convolution</title>
     <style>
+        .everything{
+            background-color: beige;
+        }
         table {
             border-collapse: separate;
             width: 100%;
             max-width: 210px;
 
         }
-
         th, td {
             padding: 7px;
             text-align: center;
@@ -23,6 +25,7 @@
         .container {
             display: flex;
             justify-content: left;
+
         }
         .iter-container {
             border-collapse: separate;
@@ -61,6 +64,7 @@
         .image-container {
             display: compact;
             flex-wrap: nowrap;
+            background: blanchedalmond;
         }
         #output-canvas {
             margin-top: 57px;
@@ -69,11 +73,84 @@
             margin-top:1px;
             margin-left:950px
         }
+        .header{
+            text-align: center;
+            font-size: x-large;
+            background-color: lightblue;
+        }
+        h3{
+            text-align: center;
+            background-color: lightcyan;
+        }
+        .top row{
+           align-content: center;
+        }
+        .left{
+            display: inline-block;
+            width: 600px;
+            padding-right: 10px;
+            padding-left: 190px;
+            padding-bottom: 10px;
+        }
+        .bts{
+            padding-left: 60px;
+            padding-right: 60px;
+            padding-top: 5px;
+            padding-bottom: 20px;
+            background-color: lightblue;
+        }
+        body{
+            background-color: beige;
+        }
+        h4{
+            padding: 0px;
+            font-size: medium;
+        }
+        .rec{
+            padding-bottom: 20px;
+            display: compact;
+            align-content: center;
+        }
 
     </style>
 </head>
 <body>
-<h1>Image Convolution</h1>
+<div class="everything">
+<div class="header">
+    <h1>Image Convolution Tool</h1>
+</div>
+<div class="top row">
+
+    <div class="left">
+        <h3>Description</h3>
+        This is a unique tool that gives the user a lot of control. While there are other convolution tools they are limited in features. This is the only tool that allows a user
+        to input their own image and then save the resulting convolution. This tool also provides accurate convolutions that do not use techniques to reduce noise. This allows for
+        an accurate depiction of how multiple convolutions can effect an image.
+    </div>
+    <div class="left">
+        <h3>Tool Features</h3>
+        This tool will take an image of any size and apply a user selected convolution matrix to transform the image.
+        There are many preset convolution options such as sharpen, blur, edge detection, etc. The user can also input their own custom values into the convolution matrix as well.
+        The user can also select the number of times they would like to apply a convolution filter. After convolving the user can also save the resulting image.
+    </div>
+    <div class="bts">
+        <h3>Behind the Scenes</h3>
+        When a user uploads an image, the image is immediately converted into grayscale. Each pixel in the original image has three values: R (red), G (green), and B (blue).
+        30% of the red value, 59% of the green value and 11% of the blue value are added together to create a new pixel value that will fall between 0 and 255. This new value represents
+        the shade of gray in our grayscale image. The image is then 'padded' by 0s in order to make sure that the convolution operations do not reduce the size of the image over time. Due
+        to the nature of how the convolution filter multiples with the image, the border rows and columns are lost after every convolution. Padding creates an artificial black border
+        around the image that prevents any of the actual image from being lost. This padding is added before every convolution.
+        Once the user selects their convolution matrix values, this matrix is then multiplied by every 3x3 section of our grayscale image. The sum
+        of the values in the resulting matrix will become the new convolved pixel value. This is done throughout the image by sliding the filter one column to the right every time.
+        When the end of a column is reached, the filter will go back to the first column and slide down one row. This is done until all rows are complete.
+        Once the resulting image matrix is generated, the program will check to see if more iterations were requested, if so the process will repeat by taking the newly convolved image
+        as the input until all iterations are complete
+
+    </div>
+</div>
+<br/>
+<br/>
+
 <div class="container">
    <div class="image-container">
         <input type="file" id="input-image" />
@@ -113,7 +190,7 @@
                 <td colspan="3">
                     <label for="options">Choose an option:</label>
                     <select id="options" name="options">
-                        <option value="option1">Identity</option>
+                        <option value="option1">Identity (just convert to B/W)</option>
                         <option value="option2">Sharpen</option>
                         <option value="option3">Mean Blur</option>
                         <option value="option4">Edge Detection</option>
@@ -143,6 +220,22 @@
 </div>
 <div class="save">
     <button id="save-button">Save Image</button>
+</div>
+<div class = "footer">
+    <div class="rec">
+        <h4>External Resources</h4>
+        <a href="https://setosa.io/ev/image-kernels/">Here</a> is a great resource that explains how convolution works in detail
+        <br/>
+        <a href="https://mebble.github.io/imfx/spatial.html"> This tool</a> and its <a href="https://github.com/mebble/imfx">GitHub Repository</a> show how convolutions are done on some preset images
+        <br/>
+        <a href="https://www.codingame.com/playgrounds/2524/basic-image-manipulation/filtering"> This website</a> Provides a good breakdown of each convolution operation and the code behind.
+    </div>
+    <div class="">
+        <strong>Developed By: </strong> Vijay Muppalla (<a href="https://www.linkedin.com/in/vijay-muppalla-7a380526a/">LinkedIn</a>)
+        <br/>
+        <strong>Supervised By: </strong> Badri Adhikari
+    </div>
+</div>
 </div>
 <script>
     const matrixValues = {
