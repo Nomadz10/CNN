@@ -1,354 +1,512 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Image Convolution</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
+      crossorigin="anonymous"
+    />
     <style>
-        .everything{
-            background-color: beige;
-        }
-        table {
-            border-collapse: separate;
-            width: 100%;
-            max-width: 210px;
+      .selector-for-some-widget {
+        box-sizing: content-box;
+      }
+      .card {
+        border: none;
+      }
+      /* .main-description {
+        padding: 50px;
+      } */
+      /* table {
+        border-collapse: separate;
+        width: 100%;
+        max-width: 210px;
+      }
+      th,
+      td {
+        padding: 7px;
+        text-align: center;
+        border: 5px solid #ddd;
+        justify-content: center;
+      }
+      .outputImage {
+        margin-top: 20px;
+      } */
+      /* .container {
+        display: flex;
+        justify-content: left;
+      } */
+      /* .iter-container {
+        border-collapse: separate;
+        flex: 1;
+        max-width: 200px;
+        margin-left: 20px;
+        justify-content: center;
+      }
+      .matrix-container {
+        flex: 1;
+        max-width: 210px;
+        margin-left: 20px;
+        margin-right: 20px;
+        justify-content: center;
+      }
+      .button {
+        margin-left: 50px;
+      }
+      #iterations input {
+        width: 30px;
+        height: 20px;
+      }
+      #convolution-matrix input {
+        width: 30px;
+        height: 20px;
+      }
+      input[type="number"]::-webkit-outer-spin-button,
+      input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
 
-        }
-        th, td {
-            padding: 7px;
-            text-align: center;
-            border: 5px solid #ddd;
-            justify-content: center;
-
-        }
-        .outputImage{
-            margin-top: 20px;
-        }
-        .container {
-            display: flex;
-            justify-content: left;
-
-        }
-        .iter-container {
-            border-collapse: separate;
-            flex: 1;
-            max-width: 200px;
-            margin-left: 20px;
-            justify-content: center;
-        }
-        .matrix-container {
-            flex: 1;
-            max-width: 210px;
-            margin-left: 20px;
-            margin-right: 20px;
-            justify-content: center;
-        }
-        .button{
-            margin-left: 50px;
-        }
-        #iterations input{
-            width: 30px;
-            height: 20px;
-        }
-        #convolution-matrix input {
-            width: 30px;
-            height: 20px;
-        }
-        input[type="number"]::-webkit-outer-spin-button,
-        input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
-        input[type="number"] {
-            -moz-appearance: textfield;
-        }
-        .image-container {
-            display: compact;
-            flex-wrap: nowrap;
-            background: blanchedalmond;
-        }
-        #output-canvas {
-            margin-top: 57px;
-        }
-        .save{
-            margin-top:1px;
-            margin-left:950px
-        }
-        .header{
-            text-align: center;
-            font-size: x-large;
-            background-color: lightblue;
-        }
-        h3{
-            text-align: center;
-            background-color: lightcyan;
-        }
-        .top row{
-           align-content: center;
-        }
-        .left{
-            display: inline-block;
-            width: 600px;
-            padding-right: 10px;
-            padding-left: 190px;
-            padding-bottom: 10px;
-        }
-        .bts{
-            padding-left: 60px;
-            padding-right: 60px;
-            padding-top: 5px;
-            padding-bottom: 20px;
-            background-color: lightblue;
-        }
-        body{
-            background-color: beige;
-        }
-        h4{
-            padding: 0px;
-            font-size: medium;
-        }
-        .rec{
-            padding-bottom: 20px;
-            display: compact;
-            align-content: center;
-        }
-
+      input[type="number"] {
+        -moz-appearance: textfield;
+      }
+      .image-container {
+        display: compact;
+        flex-wrap: nowrap;
+        background: #c1dbbf;
+      }
+      #output-canvas {
+        margin-top: 57px;
+      }
+      .save {
+        margin-top: 1px;
+        margin-left: 950px;
+      }
+      .header {
+        text-align: center;
+        font-size: x-large;
+        background-color: #50857e;
+      }
+      h3 {
+        text-align: center;
+        background-color: #50857e;
+      }
+      .top row {
+        align-content: center;
+      }
+      .left {
+        display: inline-block;
+        width: 600px;
+        padding-right: 10px;
+        padding-left: 190px;
+        padding-bottom: 10px;
+      }
+      .bts {
+        padding-left: 60px;
+        padding-right: 60px;
+        padding-top: 5px;
+        padding-bottom: 20px;
+        background-color: #c1dbbf;
+      }
+      body {
+        background-color: #c1dbbf;
+      }
+      h4 {
+        padding: 0px;
+        font-size: medium;
+      }
+      .rec {
+        padding-bottom: 20px;
+        display: compact;
+        align-content: center;
+      } */
     </style>
-</head>
-<body>
-<div class="everything">
-<div class="header">
-    <h1>Image Convolution Tool</h1>
-</div>
-<div class="top row">
-
-    <div class="left">
-        <h3>Description</h3>
-        This is a unique tool that gives the user a lot of control. While there are other convolution tools they are limited in features. This is the only tool that allows a user
-        to input their own image and then save the resulting convolution. This tool also provides accurate convolutions that do not use techniques to reduce noise. This allows for
-        an accurate depiction of how multiple convolutions can effect an image.
-    </div>
-    <div class="left">
-        <h3>Tool Features</h3>
-        This tool will take an image of any size and apply a user selected convolution matrix to transform the image.
-        There are many preset convolution options such as sharpen, blur, edge detection, etc. The user can also input their own custom values into the convolution matrix as well.
-        The user can also select the number of times they would like to apply a convolution filter. After convolving the user can also save the resulting image.
-    </div>
-    <div class="bts">
-        <h3>Behind the Scenes</h3>
-        When a user uploads an image, the image is immediately converted into grayscale. Each pixel in the original image has three values: R (red), G (green), and B (blue).
-        30% of the red value, 59% of the green value and 11% of the blue value are added together to create a new pixel value that will fall between 0 and 255. This new value represents
-        the shade of gray in our grayscale image. The image is then 'padded' by 0s in order to make sure that the convolution operations do not reduce the size of the image over time. Due
-        to the nature of how the convolution filter multiples with the image, the border rows and columns are lost after every convolution. Padding creates an artificial black border
-        around the image that prevents any of the actual image from being lost. This padding is added before every convolution.
-        Once the user selects their convolution matrix values, this matrix is then multiplied by every 3x3 section of our grayscale image. The sum
-        of the values in the resulting matrix will become the new convolved pixel value. This is done throughout the image by sliding the filter one column to the right every time.
-        When the end of a column is reached, the filter will go back to the first column and slide down one row. This is done until all rows are complete.
-        Once the resulting image matrix is generated, the program will check to see if more iterations were requested, if so the process will repeat by taking the newly convolved image
-        as the input until all iterations are complete
-
-    </div>
-</div>
-<br/>
-<br/>
-
-<div class="container">
-   <div class="image-container">
-        <input type="file" id="input-image" />
-        <br/>
-        <br/>
-        <br/>
-        <img id="uploaded-image" style="display:none" />
-        <canvas id="initial-canvas"></canvas>
-    </div>
-
-    <br />
-    <br />
-
-    <div class="matrix-container">
-        <table id="convolution-matrix">
-            <div class="title">
-                <h2>Convolution Matrix</h2>
+  </head>
+  <body>
+    <header data-bs-theme="dark">
+      <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">Muppalla Projects</a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Convolution Tool</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <div class="p-5 mb-4 bg-body-tertiary rounded-3">
+        <div class="container-fluid py-5">
+          <h1 class="dispaly-5 fw-bold">Image Convolution Tool</h1>
+          <p class="col-md-8 fs-4">Vijay Muppalla</p>
+        </div>
+      </div>
+      <div class="container-fluid main-description overflow-hidden">
+        <div class="row gy-5">
+          <div class="col-2"></div>
+          <!-- Description Card -->
+          <div class="col-3">
+            <div class="card shadow p-1 mb-5 bg-white rounded">
+              <div class="card-body">
+                <h5 class="card-title">Description</h5>
+                <p class="card-text">
+                  This is a unique tool that gives the user a lot of control.
+                  While there are other convolution tools they are limited in
+                  features. This is the only tool that allows a user to input
+                  their own image and then save the resulting convolution. This
+                  tool also provides accurate convolutions that do not use
+                  techniques to reduce noise. This allows for an accurate
+                  depiction of how multiple convolutions can effect an image.
+                </p>
+              </div>
             </div>
+          </div>
+          <!-- Tool Features Card -->
+          <div class="col-3">
+            <div class="card shadow p-1 mb-5 bg-white rounded">
+              <div class="card-body">
+                <h5 class="card-title">Tool Features</h5>
+                <p class="card-text">
+                  This tool will take an image of any size and apply a user
+                  selected convolution matrix to transform the image. There are
+                  many preset convolution options such as sharpen, blur, edge
+                  detection, etc. The user can also input their own custom
+                  values into the convolution matrix as well. The user can also
+                  select the number of times they would like to apply a
+                  convolution filter. After convolving the user can also save
+                  the resulting image.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="card shadow p-1 mb-5 bg-white rounded">
+              <div class="card-body">
+                <h5 class="card-title">Picture goes here</h5>
+                <p class="card-text"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Behind the scenes Card -->
+        <div class="row gy-5">
+          <div class="col-2"></div>
+          <div class="col-6">
+            <div class="card shadow p-1 mb-5 bg-white rounded">
+              <div class="card-body">
+                <h5 class="card-title">Behind the Scenes</h5>
+                <h6 class="card-subtitle mb-2 text-body-secondary">
+                  Card subtitle
+                </h6>
+                <p class="card-text">
+                  When a user uploads an image, the image is immediately
+                  converted into grayscale. Each pixel in the original image has
+                  three values: R (red), G (green), and B (blue). 30% of the red
+                  value, 59% of the green value and 11% of the blue value are
+                  added together to create a new pixel value that will fall
+                  between 0 and 255. This new value represents the shade of gray
+                  in our grayscale image. The image is then 'padded' by 0s in
+                  order to make sure that the convolution operations do not
+                  reduce the size of the image over time. Due to the nature of
+                  how the convolution filter multiples with the image, the
+                  border rows and columns are lost after every convolution.
+                  Padding creates an artificial black border around the image
+                  that prevents any of the actual image from being lost. This
+                  padding is added before every convolution. Once the user
+                  selects their convolution matrix values, this matrix is then
+                  multiplied by every 3x3 section of our grayscale image. The
+                  sum of the values in the resulting matrix will become the new
+                  convolved pixel value. This is done throughout the image by
+                  sliding the filter one column to the right every time. When
+                  the end of a column is reached, the filter will go back to the
+                  first column and slide down one row. This is done until all
+                  rows are complete. Once the resulting image matrix is
+                  generated, the program will check to see if more iterations
+                  were requested, if so the process will repeat by taking the
+                  newly convolved image as the input until all iterations are
+                  complete
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-3"></div>
+        </div>
+      </div>
+      <br />
+      <div class="container-fluid p-5 overflow-hidden">
+        <div class="row">
+          <div class="col">
+            <div class="image-container">
+              <input type="file" id="input-image" />
+              <br />
+              <br />
+              <br />
+              <img id="uploaded-image" style="display: none" />
+              <canvas id="initial-canvas"></canvas>
+            </div>
+          </div>
+          <div class="col">
+            <div class="container">
+              <table id="convolution-matrix">
+                <div class="title">
+                  <h2>Convolution Matrix</h2>
+                </div>
 
-            <tr>
-                <td><input type="number" id="matrix-0-0" /></td>
-                <td><input type="number" id="matrix-0-1" /></td>
-                <td><input type="number" id="matrix-0-2" /></td>
-            </tr>
-            <tr>
-                <td><input type="number" id="matrix-1-0" /></td>
-                <td><input type="number" id="matrix-1-1" /></td>
-                <td><input type="number" id="matrix-1-2" /></td>
-            </tr>
-            <tr>
-                <td><input type="number" id="matrix-2-0" /></td>
-                <td><input type="number" id="matrix-2-1" /></td>
-                <td><input type="number" id="matrix-2-2" /></td>
-            </tr>
+                <tr>
+                  <td><input type="number" id="matrix-0-0" /></td>
+                  <td><input type="number" id="matrix-0-1" /></td>
+                  <td><input type="number" id="matrix-0-2" /></td>
+                </tr>
+                <tr>
+                  <td><input type="number" id="matrix-1-0" /></td>
+                  <td><input type="number" id="matrix-1-1" /></td>
+                  <td><input type="number" id="matrix-1-2" /></td>
+                </tr>
+                <tr>
+                  <td><input type="number" id="matrix-2-0" /></td>
+                  <td><input type="number" id="matrix-2-1" /></td>
+                  <td><input type="number" id="matrix-2-2" /></td>
+                </tr>
 
-            <tr>
-                <td colspan="3">
+                <tr>
+                  <td colspan="3">
                     <label for="options">Choose an option:</label>
                     <select id="options" name="options">
-                        <option value="option1">Identity (just convert to B/W)</option>
-                        <option value="option2">Sharpen</option>
-                        <option value="option3">Mean Blur</option>
-                        <option value="option4">Edge Detection</option>
-                        <option value="option5">Gaussian Blur</option>
-                        <option value="option6">Horizontal Sobel</option>
-                        <option value="option7">Vertical Sobel</option>
+                      <option value="option1">
+                        Identity (just convert to B/W)
+                      </option>
+                      <option value="option2">Sharpen</option>
+                      <option value="option3">Mean Blur</option>
+                      <option value="option4">Edge Detection</option>
+                      <option value="option5">Gaussian Blur</option>
+                      <option value="option6">Horizontal Sobel</option>
+                      <option value="option7">Vertical Sobel</option>
                     </select>
-                </td>
-            </tr>
-        </table>
-        <div class="iter-container">
-            <label for="iterations">Number of Iterations:</label>
-            <input type="number" id="iterations" value="1" style="width: 25px;" />
-            <br/>
-            <br/>
-            <div class="button">
-                <button id="convolve-button">Convolve</button>
+                  </td>
+                </tr>
+              </table>
+              <div class="iter-container">
+                <label for="iterations">Number of Iterations:</label>
+                <input
+                  type="number"
+                  id="iterations"
+                  value="1"
+                  style="width: 25px"
+                />
+                <br />
+                <br />
+                <div class="button">
+                  <button id="convolve-button">Convolve</button>
+                </div>
+              </div>
             </div>
+          </div>
+          <div class="col">
+            <br />
+            <br />
+            <br />
+            <div id="output-canvas"></div>
+          </div>
         </div>
-    </div>
-    <br/>
-    <br/>
-    <br/>
-    <div id="output-canvas"></div>
+      </div>
+      <div class="save">
+        <button id="save-button">Save Image</button>
+      </div>
+      <div class="footer">
+        <div class="rec">
+          <h4>External Resources</h4>
+          <a href="https://setosa.io/ev/image-kernels/">Here</a> is a great
+          resource that explains how convolution works in detail
+          <br />
+          <a href="https://mebble.github.io/imfx/spatial.html"> This tool</a>
+          and its
+          <a href="https://github.com/mebble/imfx">GitHub Repository</a> show
+          how convolutions are done on some preset images
+          <br />
+          <a
+            href="https://www.codingame.com/playgrounds/2524/basic-image-manipulation/filtering"
+          >
+            This website</a
+          >
+          Provides a good breakdown of each convolution operation and the code
+          behind.
+        </div>
+        <div class="">
+          <strong>Developed By: </strong> Vijay Muppalla (<a
+            href="https://www.linkedin.com/in/vijay-muppalla-7a380526a/"
+            >LinkedIn</a
+          >)
+          <br />
+          <strong>Supervised By: </strong> Badri Adhikari
+        </div>
+      </div>
+    </main>
+    <script>
+      const matrixValues = {
+        option1: [
+          [0, 0, 0],
+          [0, 1, 0],
+          [0, 0, 0],
+        ],
+        option2: [
+          [0, -1, 0],
+          [-1, 5, -1],
+          [0, -1, 0],
+        ],
+        option3: [
+          [1 / 9, 1 / 9, 1 / 9],
+          [1 / 9, 1 / 9, 1 / 9],
+          [1 / 9, 1 / 9, 1 / 9],
+        ],
+        option4: [
+          [-1, -1, -1],
+          [-1, 8, -1],
+          [-1, -1, -1],
+        ],
+        option5: [
+          [1 / 16, 2 / 16, 1 / 16],
+          [2 / 16, 4 / 16, 2 / 16],
+          [1 / 16, 2 / 16, 1 / 16],
+        ],
+        option6: [
+          [-1, -2, -1],
+          [0, 0, 0],
+          [1, 2, 1],
+        ],
+        option7: [
+          [-1, 0, 1],
+          [-2, 0, 2],
+          [-1, 0, 1],
+        ],
+      };
 
+      const selectElement = document.getElementById("options");
+      const matrixInputs = document.querySelectorAll(
+        "#convolution-matrix input"
+      );
 
-</div>
-<div class="save">
-    <button id="save-button">Save Image</button>
-</div>
-<div class = "footer">
-    <div class="rec">
-        <h4>External Resources</h4>
-        <a href="https://setosa.io/ev/image-kernels/">Here</a> is a great resource that explains how convolution works in detail
-        <br/>
-        <a href="https://mebble.github.io/imfx/spatial.html"> This tool</a> and its <a href="https://github.com/mebble/imfx">GitHub Repository</a> show how convolutions are done on some preset images
-        <br/>
-        <a href="https://www.codingame.com/playgrounds/2524/basic-image-manipulation/filtering"> This website</a> Provides a good breakdown of each convolution operation and the code behind.
-    </div>
-    <div class="">
-        <strong>Developed By: </strong> Vijay Muppalla (<a href="https://www.linkedin.com/in/vijay-muppalla-7a380526a/">LinkedIn</a>)
-        <br/>
-        <strong>Supervised By: </strong> Badri Adhikari
-    </div>
-</div>
-</div>
-<script>
-    const matrixValues = {
-        option1: [[0, 0, 0], [0, 1, 0], [0, 0, 0]],
-        option2: [[0, -1, 0], [-1, 5, -1], [0, -1, 0]],
-        option3: [[1/9, 1/9, 1/9], [1/9, 1/9, 1/9], [1/9, 1/9, 1/9]],
-        option4: [[-1, -1, -1], [-1, 8, -1], [-1, -1, -1]],
-        option5: [[1/16, 2/16, 1/16], [2/16, 4/16, 2/16], [1/16, 2/16, 1/16]],
-        option6: [[-1,-2,-1],[0,0,0],[1,2,1]],
-        option7: [[-1,0,1],[-2,0,2],[-1,0,1]],
-    };
-
-    const selectElement = document.getElementById('options');
-    const matrixInputs = document.querySelectorAll('#convolution-matrix input');
-
-    selectElement.addEventListener('change', function() {
+      selectElement.addEventListener("change", function () {
         const selectedOption = this.value;
         if (selectedOption in matrixValues) {
-            const selectedMatrix = matrixValues[selectedOption];
-            for (let i = 0; i < selectedMatrix.length; i++) {
-                for (let j = 0; j < selectedMatrix[i].length; j++) {
-                    const inputElement = document.getElementById(`matrix-${i}-${j}`);
-                    inputElement.value = selectedMatrix[i][j];
-                }
+          const selectedMatrix = matrixValues[selectedOption];
+          for (let i = 0; i < selectedMatrix.length; i++) {
+            for (let j = 0; j < selectedMatrix[i].length; j++) {
+              const inputElement = document.getElementById(`matrix-${i}-${j}`);
+              inputElement.value = selectedMatrix[i][j];
             }
+          }
         } else {
-            for (let i = 0; i < matrixInputs.length; i++) {
-                matrixInputs[i].value = '';
-            }
+          for (let i = 0; i < matrixInputs.length; i++) {
+            matrixInputs[i].value = "";
+          }
         }
-    });
+      });
 
+      const iterationsInput = document.getElementById("iterations");
+      const convolveButton = document.getElementById("convolve-button");
+      const initialCanvas = document.getElementById("initial-canvas");
+      let inputImageData;
 
-
-
-    const iterationsInput = document.getElementById("iterations");
-    const convolveButton = document.getElementById("convolve-button");
-    const initialCanvas = document.getElementById("initial-canvas");
-    let inputImageData;
-
-    function convertToGrayscale(imageData) {
+      function convertToGrayscale(imageData) {
         let grayscaleMatrix = [];
         for (let i = 0; i < imageData.height; i++) {
-            grayscaleMatrix[i] = [];
-            for (let j = 0; j < imageData.width; j++) {
-                let index = (i * 4) * imageData.width + (j * 4);
-                let r = imageData.data[index];
-                let g = imageData.data[index + 1];
-                let b = imageData.data[index + 2];
-                grayscaleMatrix[i][j] = 0.3 * r + 0.59 * g + 0.11 * b;
-            }
+          grayscaleMatrix[i] = [];
+          for (let j = 0; j < imageData.width; j++) {
+            let index = i * 4 * imageData.width + j * 4;
+            let r = imageData.data[index];
+            let g = imageData.data[index + 1];
+            let b = imageData.data[index + 2];
+            grayscaleMatrix[i][j] = 0.3 * r + 0.59 * g + 0.11 * b;
+          }
         }
         return grayscaleMatrix;
-    }
+      }
 
-
-
-    function convolution2D(largeMatrix, smallMatrix) {
+      function convolution2D(largeMatrix, smallMatrix) {
         let result = [];
         for (let i = 0; i < largeMatrix.length - 2; i++) {
-            result[i] = [];
-            for (let j = 0; j < largeMatrix[i].length - 2; j++) {
-                let sum = 0;
-                for (let k = 0; k < 3; k++) {
-                    for (let l = 0; l < 3; l++) {
-                        sum += (largeMatrix[i + k][j + l] * smallMatrix[k][l]);
-                    }
-                }
-                result[i][j] = sum;
+          result[i] = [];
+          for (let j = 0; j < largeMatrix[i].length - 2; j++) {
+            let sum = 0;
+            for (let k = 0; k < 3; k++) {
+              for (let l = 0; l < 3; l++) {
+                sum += largeMatrix[i + k][j + l] * smallMatrix[k][l];
+              }
             }
+            result[i][j] = sum;
+          }
         }
         return result;
-    }
+      }
 
-    const inputImage = document.getElementById("input-image");
-    const canvas = document.createElement('canvas');
-    const w = 700;
-    const h = 800;
-    inputImage.addEventListener("change", function(event) {
-        let canvasDiv = document.getElementById('output-canvas');
-        canvasDiv.innerHTML = '';
+      const inputImage = document.getElementById("input-image");
+      const canvas = document.createElement("canvas");
+      const w = 700;
+      const h = 800;
+      inputImage.addEventListener("change", function (event) {
+        let canvasDiv = document.getElementById("output-canvas");
+        canvasDiv.innerHTML = "";
         let reader = new FileReader();
-        reader.onload = function(event) {
-            let image = new Image();
-            image.onload = function() {
-                initialCanvas.width = image.width;
-                initialCanvas.height = image.height;
-                if (initialCanvas.width > w) {
-                    initialCanvas.height *= w / initialCanvas.width;
-                    initialCanvas.width = w;
-                } else {
-                    if (initialCanvas.height > h) {
-                        initialCanvas.width *= h / initialCanvas.height;
-                        initialCanvas.height = h;
-                    }
-                }
-                canvas.width = initialCanvas.width;
-                canvas.height = initialCanvas.height;
-                let context = initialCanvas.getContext("2d");
-                context.drawImage(image, 0, 0, initialCanvas.width, initialCanvas.height );
-                inputImageData = context.getImageData(0, 0, initialCanvas.width, initialCanvas.height);
-
-            };
-            image.src = event.target.result;
+        reader.onload = function (event) {
+          let image = new Image();
+          image.onload = function () {
+            initialCanvas.width = image.width;
+            initialCanvas.height = image.height;
+            if (initialCanvas.width > w) {
+              initialCanvas.height *= w / initialCanvas.width;
+              initialCanvas.width = w;
+            } else {
+              if (initialCanvas.height > h) {
+                initialCanvas.width *= h / initialCanvas.height;
+                initialCanvas.height = h;
+              }
+            }
+            canvas.width = initialCanvas.width;
+            canvas.height = initialCanvas.height;
+            let context = initialCanvas.getContext("2d");
+            context.drawImage(
+              image,
+              0,
+              0,
+              initialCanvas.width,
+              initialCanvas.height
+            );
+            inputImageData = context.getImageData(
+              0,
+              0,
+              initialCanvas.width,
+              initialCanvas.height
+            );
+          };
+          image.src = event.target.result;
         };
         reader.readAsDataURL(event.target.files[0]);
-    });
+      });
 
-
-    convolveButton.addEventListener("click", function(event) {
+      convolveButton.addEventListener("click", function (event) {
         event.preventDefault();
         if (!inputImageData) {
-            return alert("Please select an image.");
+          return alert("Please select an image.");
         }
 
         //NUMBER OF ITERATIONS
@@ -357,69 +515,96 @@
         let finMatrix = convertToGrayscale(inputImageData);
 
         //DEFAULT CONV MATRIX
-        let convMatrix = [[-1,-1,-1],[-1,2,-1],[-1,-1,-1]]
+        let convMatrix = [
+          [-1, -1, -1],
+          [-1, 2, -1],
+          [-1, -1, -1],
+        ];
         //GETTING THE CONVOLUTION MATRIX
-        convMatrix[0][0] = parseFloat((document.getElementById("matrix-0-0")).value)
-        convMatrix[0][1] = parseFloat((document.getElementById("matrix-0-1")).value)
-        convMatrix[0][2] = parseFloat((document.getElementById("matrix-0-2")).value)
-        convMatrix[1][0] = parseFloat((document.getElementById("matrix-1-0")).value)
-        convMatrix[1][1] = parseFloat((document.getElementById("matrix-1-1")).value)
-        convMatrix[1][2] = parseFloat((document.getElementById("matrix-1-2")).value)
-        convMatrix[2][0] = parseFloat((document.getElementById("matrix-2-0")).value)
-        convMatrix[2][1] = parseFloat((document.getElementById("matrix-2-1")).value)
-        convMatrix[2][2] = parseFloat((document.getElementById("matrix-2-2")).value)
+        convMatrix[0][0] = parseFloat(
+          document.getElementById("matrix-0-0").value
+        );
+        convMatrix[0][1] = parseFloat(
+          document.getElementById("matrix-0-1").value
+        );
+        convMatrix[0][2] = parseFloat(
+          document.getElementById("matrix-0-2").value
+        );
+        convMatrix[1][0] = parseFloat(
+          document.getElementById("matrix-1-0").value
+        );
+        convMatrix[1][1] = parseFloat(
+          document.getElementById("matrix-1-1").value
+        );
+        convMatrix[1][2] = parseFloat(
+          document.getElementById("matrix-1-2").value
+        );
+        convMatrix[2][0] = parseFloat(
+          document.getElementById("matrix-2-0").value
+        );
+        convMatrix[2][1] = parseFloat(
+          document.getElementById("matrix-2-1").value
+        );
+        convMatrix[2][2] = parseFloat(
+          document.getElementById("matrix-2-2").value
+        );
         //IF EMPTY MATRIX IS ENTERED THIS GIVES IDENTITY
         if (Number.isNaN(convMatrix[0][0])) {
-            convMatrix = [[0,0,0],[0,1,0],[0,0,0]]
+          convMatrix = [
+            [0, 0, 0],
+            [0, 1, 0],
+            [0, 0, 0],
+          ];
         }
 
         //ACTUAL CONVOLUTIONS HAPPENING
         for (let i = 0; i < iterations; i++) {
-            //ADDING PADDING
-            let size = finMatrix[0].length;
-            const zerosArray = new Array(size).fill(0);
-            finMatrix.unshift(zerosArray);
-            finMatrix.push(zerosArray);
-            finMatrix = finMatrix.map(row => [0,...row, 0]);
-            console.log(finMatrix)
-            finMatrix = convolution2D(finMatrix,convMatrix);
+          //ADDING PADDING
+          let size = finMatrix[0].length;
+          const zerosArray = new Array(size).fill(0);
+          finMatrix.unshift(zerosArray);
+          finMatrix.push(zerosArray);
+          finMatrix = finMatrix.map((row) => [0, ...row, 0]);
+          console.log(finMatrix);
+          finMatrix = convolution2D(finMatrix, convMatrix);
         }
-        console.log(finMatrix)
-        let canvas = document.createElement('canvas')
-        let canvasDiv = document.getElementById('output-canvas');
-        canvasDiv.innerHTML = '';
+        console.log(finMatrix);
+        let canvas = document.createElement("canvas");
+        let canvasDiv = document.getElementById("output-canvas");
+        canvasDiv.innerHTML = "";
         canvas.width = finMatrix[0].length;
         canvas.height = finMatrix.length;
         canvasDiv.appendChild(canvas);
 
-
-        let context = canvas.getContext('2d');
-        let finImgData = context.createImageData(canvas.width, canvas.height)
+        let context = canvas.getContext("2d");
+        let finImgData = context.createImageData(canvas.width, canvas.height);
 
         for (let y = 0; y < finMatrix.length; y++) {
-            for (let x = 0; x < finMatrix[0].length; x++) {
-                const index = 4 * (x + y * finMatrix[0].length);
-                finImgData.data[index] = finMatrix[y][x];
-                finImgData.data[index + 1] = finMatrix[y][x];
-                finImgData.data[index + 2] = finMatrix[y][x];
-                finImgData.data[index + 3] = 255;
-            }
+          for (let x = 0; x < finMatrix[0].length; x++) {
+            const index = 4 * (x + y * finMatrix[0].length);
+            finImgData.data[index] = finMatrix[y][x];
+            finImgData.data[index + 1] = finMatrix[y][x];
+            finImgData.data[index + 2] = finMatrix[y][x];
+            finImgData.data[index + 3] = 255;
+          }
         }
         context.putImageData(finImgData, 0, 0);
         const saveButton = document.getElementById("save-button");
         saveButton.addEventListener("click", () => {
-            const dataURL = canvas.toDataURL("image/png"); // convert canvas content to data URL
-            const downloadLink = document.createElement("a"); // create a new download link
-            downloadLink.href = dataURL; // set the href of the link to the data URL
-            downloadLink.download = "convolutedImage.png"; // set the download filename
-            document.body.appendChild(downloadLink); // append the link to the document body
-            downloadLink.click(); // simulate a click on the link to trigger the download
-            document.body.removeChild(downloadLink); // remove the link from the document body
+          const dataURL = canvas.toDataURL("image/png"); // convert canvas content to data URL
+          const downloadLink = document.createElement("a"); // create a new download link
+          downloadLink.href = dataURL; // set the href of the link to the data URL
+          downloadLink.download = "convolutedImage.png"; // set the download filename
+          document.body.appendChild(downloadLink); // append the link to the document body
+          downloadLink.click(); // simulate a click on the link to trigger the download
+          document.body.removeChild(downloadLink); // remove the link from the document body
         });
-
-    });
-
-
-</script>
-</body>
+      });
+    </script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+      crossorigin="anonymous"
+    ></script>
+  </body>
 </html>
