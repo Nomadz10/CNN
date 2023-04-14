@@ -11,11 +11,63 @@
       crossorigin="anonymous"
     />
     <style>
+      body {
+        overflow-x: hidden;
+        background-color: #F5F5F5;
+      }
       .selector-for-some-widget {
         box-sizing: content-box;
       }
       .card {
         border: none;
+      }
+      #convolution-matrix input {
+        width: 3em;
+        padding-left: 5px;
+        text-align: center;
+      }
+      #convolution-matrix input::-webkit-outer-spin-button,
+      #convolution-matrix input::-webkit-inner-spin-button {
+        display: none;
+      }
+
+      #iterations {
+        width: 3em;
+        text-align: center;
+      }
+      .banner {
+        background-color: #519592;
+        color: white;
+      }
+      .footer {
+        background-color: #519592;
+        color: white;
+      }
+      .link-secondary {
+        color: white;
+      }
+      /* .card {
+        color: white;
+        background: rgba( 255, 255, 255, 0.25 );
+        box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+        backdrop-filter: blur( 7.5px );
+        -webkit-backdrop-filter: blur( 7.5px );
+        border-radius: 10px;
+      } */
+      .t-div {
+        max-width: 4em;
+        padding-bottom: 0.5em;
+      }
+      .navbar-custom {
+        background-color:#519592;
+      }
+      .navbar-brand {
+        color:white;
+      }
+      @media (min-width: 786px) {
+        .form-control-file {
+          width: 300px;
+        }
       }
       /* .main-description {
         padding: 50px;
@@ -127,7 +179,7 @@
   </head>
   <body>
     <header data-bs-theme="dark">
-      <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <nav class="navbar navbar-expand-lg navbar-custom">
         <div class="container-fluid">
           <a class="navbar-brand" href="#">Muppalla Projects</a>
           <button
@@ -155,7 +207,7 @@
       </nav>
     </header>
     <main>
-      <div class="p-5 mb-4 bg-body-tertiary rounded-3">
+      <div class="banner p-5 mb-4">
         <div class="container-fluid py-5">
           <h1 class="dispaly-5 fw-bold">Image Convolution Tool</h1>
           <p class="col-md-8 fs-4">Vijay Muppalla</p>
@@ -165,8 +217,8 @@
         <div class="row gy-5">
           <div class="col-2"></div>
           <!-- Description Card -->
-          <div class="col-3">
-            <div class="card shadow p-1 mb-5 bg-white rounded">
+          <div class="col-sm-3">
+            <div class="card shadow p-1 mb-5 rounded h-100">
               <div class="card-body">
                 <h5 class="card-title">Description</h5>
                 <p class="card-text">
@@ -182,8 +234,8 @@
             </div>
           </div>
           <!-- Tool Features Card -->
-          <div class="col-3">
-            <div class="card shadow p-1 mb-5 bg-white rounded">
+          <div class="col-sm-3">
+            <div class="card shadow p-1 mb-5 rounded h-100">
               <div class="card-body">
                 <h5 class="card-title">Tool Features</h5>
                 <p class="card-text">
@@ -199,25 +251,19 @@
               </div>
             </div>
           </div>
-          <div class="col-4">
-            <div class="card shadow p-1 mb-5 bg-white rounded">
-              <div class="card-body">
-                <h5 class="card-title">Picture goes here</h5>
-                <p class="card-text"></p>
-              </div>
-            </div>
+          <div class="col-sm-2 offset-md-1">
+            <img src="asset.png" class="img-fluid rounded" alt="asset-1" />
           </div>
         </div>
+        <br />
         <!-- Behind the scenes Card -->
         <div class="row gy-5">
           <div class="col-2"></div>
-          <div class="col-6">
-            <div class="card shadow p-1 mb-5 bg-white rounded">
+          <div class="col-sm-6">
+            <div class="card shadow p-1 mb-5 rounded">
               <div class="card-body">
                 <h5 class="card-title">Behind the Scenes</h5>
-                <h6 class="card-subtitle mb-2 text-body-secondary">
-                  Card subtitle
-                </h6>
+
                 <p class="card-text">
                   When a user uploads an image, the image is immediately
                   converted into grayscale. Each pixel in the original image has
@@ -252,22 +298,198 @@
           <div class="col-3"></div>
         </div>
       </div>
-      <br />
+      <div class="row"></div>
       <div class="container-fluid p-5 overflow-hidden">
-        <div class="row">
-          <div class="col">
+        <hr />
+        <br />
+        <div class="row justify-content-center">
+          <div class="col-sm">
             <div class="image-container">
-              <input type="file" id="input-image" />
-              <br />
-              <br />
+              <label for="formFileSm" class="form-label">Upload an image</label>
+              <input
+                class="form-control form-control-sm form-control-file"
+                id="input-image"
+                type="file"
+              />
+              <!-- <input type="file" id="input-image" /> -->
               <br />
               <img id="uploaded-image" style="display: none" />
               <canvas id="initial-canvas"></canvas>
             </div>
           </div>
-          <div class="col">
-            <div class="container">
-              <table id="convolution-matrix">
+          <div class="col-md-3">
+            <div class="container matrix-space">
+              <div class="card table-card">
+                <div class="card-body" id="convolution-matrix">
+                  <h2 class="card-title text-center">Convolution Matrix</h2>
+                  <div class="row matrix-row justify-content-center">
+                    <div class="col-md-6 matrix-col">
+                      <div class="row t-row justify-content-center">
+                        <div class="col t-div">
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="matrix-0-0"
+                          />
+                        </div>
+                        <div class="col t-div">
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="matrix-0-1"
+                          />
+                        </div>
+                        <div class="col t-div">
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="matrix-0-2"
+                          />
+                        </div>
+                      </div>
+                      <div class="row t-row justify-content-center">
+                        <div class="col t-div">
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="matrix-1-0"
+                          />
+                        </div>
+                        <div class="col t-div">
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="matrix-1-1"
+                          />
+                        </div>
+                        <div class="col t-div">
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="matrix-1-2"
+                          />
+                        </div>
+                      </div>
+                      <div class="row t-row justify-content-center">
+                        <div class="col t-div">
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="matrix-2-0"
+                          />
+                        </div>
+                        <div class="col t-div">
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="matrix-2-1"
+                          />
+                        </div>
+                        <div class="col t-div">
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="matrix-2-2"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row justify-content-center">
+                    <div class="col-md-9">
+                      <!-- <label for="options">Choose an option:</label> -->
+                      <select
+                        class="form-select form-select-sm"
+                        id="options"
+                        name="options"
+                        aria-label=".form-select-sm example"
+                      >
+                        <option disabled selected data-hidden="true">
+                          Select an option
+                        </option>
+                        <option value="option1">
+                          Identity (just convert to B/W)
+                        </option>
+                        <option value="option2">Sharpen</option>
+                        <option value="option3">Mean Blur</option>
+                        <option value="option4">Edge Detection</option>
+                        <option value="option5">Gaussian Blur</option>
+                        <option value="option6">Horizontal Sobel</option>
+                        <option value="option7">Vertical Sobel</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <!-- <table
+                    class="table matrix-table table-borderless table-responsive table-sm"
+                    style=""
+                    id="convolution-matrix"
+                  >
+                    <tr>
+                      <td class="table-div">
+                        <input type="number" id="matrix-0-0" />
+                      </td>
+                      <td class="table-div">
+                        <input type="number" id="matrix-0-1" />
+                      </td>
+                      <td class="table-div">
+                        <input type="number" id="matrix-0-2" />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="table-div">
+                        <input type="number" id="matrix-1-0" />
+                      </td>
+                      <td class="table-div">
+                        <input type="number" id="matrix-1-1" />
+                      </td>
+                      <td class="table-div">
+                        <input type="number" id="matrix-1-2" />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="table-div">
+                        <input type="number" id="matrix-2-0" />
+                      </td>
+                      <td class="table-div">
+                        <input type="number" id="matrix-2-1" />
+                      </td>
+                      <td class="table-div">
+                        <input type="number" id="matrix-2-2" />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td colspan="3">
+                        <label for="options">Choose an option:</label>
+                        <select id="options" name="options">
+                          <option value="option1">
+                            Identity (just convert to B/W)
+                          </option>
+                          <option value="option2">Sharpen</option>
+                          <option value="option3">Mean Blur</option>
+                          <option value="option4">Edge Detection</option>
+                          <option value="option5">Gaussian Blur</option>
+                          <option value="option6">Horizontal Sobel</option>
+                          <option value="option7">Vertical Sobel</option>
+                        </select>
+                      </td>
+                    </tr>
+                  </table> -->
+                </div>
+                <hr />
+                <div class="card-body">
+                  <label for="iterations">Number of Iterations:</label>
+                  <input type="number" id="iterations" value="1" />
+                  <br />
+                  <br />
+                  <button class="btn btn-primary" id="convolve-button">
+                    Convolve
+                  </button>
+                </div>
+              </div>
+
+              <!-- <table class="matrix-table" id="convolution-matrix">
                 <div class="title">
                   <h2>Convolution Matrix</h2>
                 </div>
@@ -304,35 +526,131 @@
                     </select>
                   </td>
                 </tr>
-              </table>
-              <div class="iter-container">
-                <label for="iterations">Number of Iterations:</label>
-                <input
-                  type="number"
-                  id="iterations"
-                  value="1"
-                  style="width: 25px"
-                />
-                <br />
-                <br />
-                <div class="button">
-                  <button id="convolve-button">Convolve</button>
-                </div>
-              </div>
+              </table> -->
             </div>
           </div>
-          <div class="col">
-            <br />
-            <br />
-            <br />
-            <div id="output-canvas"></div>
+          <div class="col-sm">
+            <div class="output-container">
+              <br />
+              <br />
+              <br />
+              <div id="output-canvas"></div>
+            </div>
           </div>
         </div>
+        <div class="row align-items-end">
+          <div class="col"></div>
+          <div class="col-5">
+            <div class="save">
+              <button type="button" class="btn btn-primary" id="save-button">
+                Save Image
+              </button>
+            </div>
+          </div>
+          <div class="col"></div>
+        </div>
       </div>
-      <div class="save">
-        <button id="save-button">Save Image</button>
+
+      <div class=" footer container-fluid p-3 ">
+        <footer class="pt-4 my-md-5 pt-md-5 border-top">
+          <div class="row">
+            <!-- Footer Description -->
+            <div class="col-lg-3 mb-3">
+              <span class="fs-5">Image Convolution</span>
+              <ul class="list-unstyled small text-muted">
+                <li class="mb-2 link-secondary">
+                  Designed and built by
+                  <a
+                    href="https://www.linkedin.com/in/vijay-muppalla-7a380526a/"
+                    class="link-secondary"
+                    target="_blank"
+                    >Vijay Muppalla</a
+                  >
+                </li>
+                <li class="mb-2 link-secondary">Supervised By: Badri Adhikari</li>
+                <li class="mb-2 link-secondary">Currently v1.0.0</li>
+                <li class="mb-2 link-secondary">© 2023</li>
+                <li class="mb-2 link-secondary"></li>
+              </ul>
+            </div>
+            <!-- External Resources Links -->
+            <div class="col-6 col-lg-2 mb-3">
+              <h5>External Resources</h5>
+              <ul class="list-unstyled text-small" >
+                <li class="mb-1">
+                  <a
+                    class="link-secondary text-decoration-none"
+                    href="https://setosa.io/ev/image-kernels/"
+                    target="_blank"
+                    >How Convolution Works</a
+                  >
+                </li>
+                <li class="mb-1">
+                  <a
+                    class="link-secondary text-decoration-none"
+                    href="https://mebble.github.io/imfx/spatial.html"
+                    target="_blank"
+                  >
+                    Mebble Tool Demo</a
+                  >
+                </li>
+                <li class="mb-1">
+                  <a
+                    class="link-secondary text-decoration-none"
+                    href="https://github.com/mebble/imfx"
+                    target="_blank"
+                  >
+                    Mebble Tool Repository
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <!-- About Section -->
+            <div class="col-6 col-lg-2 mb-3">
+              <h5>Projects</h5>
+              <ul class="list-unstyled text-small">
+                <li class="mb-1"></li>
+                <li class="mb-1"></li>
+                <li class="mb-1"></li>
+              </ul>
+            </div>
+            <!-- Contact Section -->
+            <div class="col-6 col-lg-2 mb-3">
+              <h5>Contact</h5>
+              <a
+                href="https://www.linkedin.com/in/vijay-muppalla-7a380526a/"
+                target="_blank"
+                class="icons "
+                ><span style="color: white"
+                  ><i class="fa-brands fa-linkedin fa-xl"></i></span
+              ></a>
+
+              <a
+                href="https://www.linkedin.com/in/vijay-muppalla-7a380526a/"
+                target="_blank"
+                class="icons p-1"
+                ><span style="color: white"
+                  ><i class="fa-brands fa-github fa-xl"></i></span></a
+              ><a
+                href="https://www.linkedin.com/in/vijay-muppalla-7a380526a/"
+                target="_blank"
+                class="icons p-1"
+                ><span style="color: white"
+                  ><i class="fa-brands fa-gitlab fa-xl"></i></i></span
+              ></a>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6 align-self-start"></div>
+            <div class="col-6 align-self-center"></div>
+            <div class="col-6 align-items-end align-items-end small">
+              With help by <a class="link-secondary text-decoration-none" href="https://www.linkedin.com/in/elise-falck-5b3222128">Elise</a> 💖
+            </div>
+          </div>
+        </footer>
       </div>
-      <div class="footer">
+
+      <!-- <div class="footer">
         <div class="rec">
           <h4>External Resources</h4>
           <a href="https://setosa.io/ev/image-kernels/">Here</a> is a great
@@ -359,7 +677,7 @@
           <br />
           <strong>Supervised By: </strong> Badri Adhikari
         </div>
-      </div>
+      </div> -->
     </main>
     <script>
       const matrixValues = {
@@ -604,6 +922,10 @@
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://kit.fontawesome.com/c5b250e284.js"
       crossorigin="anonymous"
     ></script>
   </body>
